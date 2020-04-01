@@ -1,26 +1,54 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {Component} from 'react';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+import Header from './components/Header';
+import Pagos from './components/Pagos';
+import Formulario from './components/Formulario';
+
+class App extends Component {
+  state ={
+    pagos : []
+  }
+  
+  componentDidMount() {
+    this.consultaPagos();
+  }
+
+  consultaPagos = (categoria = 'pago') =>{
+   
+    let url= `http://localhost:60583/api/${categoria}`;
+   
+
+
+    fetch(url)
+    .then(respuesta =>{
+      return respuesta.json();
+    })
+    .then(pagos =>{
+      this.setState(
+        {
+          pagos:pagos
+        }
+      )
+    })
+
+  };
+
+  render (){
+    return(
+      <div >
+        <Header 
+         titulo="Noticias"
+        />
+        <Formulario
+          consultarPagos = {this.consultaPagos} 
+        />
+
+        <Pagos
+          pagos={this.state.pagos}
+        />
     </div>
-  );
+    ); 
+  }
 }
 
 export default App;
